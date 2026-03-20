@@ -1,6 +1,6 @@
 title: 李博轩(Alex)
 description: 图形程序 & 技术美术作品集 | 27届
-theme: jekyll-theme-minimal
+theme: jekyll-theme-cayman
 markdown: kramdown
 kramdown:
   input: GFM

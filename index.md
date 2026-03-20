@@ -40,7 +40,7 @@ layout(push_constant) uniform Push {
 </div>
 
 <div align="center">
-    <img src="./assets/myvk-ibl.png" width="50%">
+    <img src="./assets/myvk-ibl.png" width="75%">
 </div>
 
 结果说明：RGBE 编码格式预积分结果中，最左侧为 Diffuse 项，后续为不同 Roughness Level 下的 Specular 项。
@@ -84,11 +84,11 @@ MyVk 关键实现总结：
 材料：架构图、基础光追 32spp vs NEE 32spp（待补充）。
 
 <div align="center">
-    <img src="./assets/mtpt-caustics-pt-8h.png" width="50%">
+    <img src="./assets/mtpt-caustics-pt-8h.png" width="75%">
 </div>
 
 <div align="center">
-    <img src="./assets/mypt-caustics-pm-32spp.png" width="50%">
+    <img src="./assets/mypt-caustics-pm-32spp.png" width="75%">
 </div>
 
 结果对比：纯 Path Tracing（8h）仍有明显噪点；结合 Photon Mapping 的 Path Tracing（32spp，约 40min）可显著改善复杂间接光照质量。
@@ -100,14 +100,14 @@ MyVk 关键实现总结：
 项目概述：论文提出面向焦散渲染的新算法，分为预计算与渲染两个阶段，通过保守边界与重要性采样提升采样效率。
 
 <div align="center">
-    <img src="./assets/sig-fig_dragon.png">
+    <img src="./assets/sig-fig_dragon.png" width="75%">
 </div>
 
 #### Python 到 C++ 的工程重构
 我的贡献：将算法原型由 Python 重构为现代 C++，优化内存与计算逻辑，实测性能贴合理论预期。
 
 <div align="center">
-    <img src="./assets/sig-arch.png" width="50%">
+    <img src="./assets/sig-arch.png" width="75%">
 </div>
 
 架构说明：抽象父类 Bounder 负责公共流程（预计算数据准备、栈空间初始化、结果输出）；BVP 类负责 Bernstein 基多项式初始化与边界计算，并通过随机数测试验证可靠性。
