@@ -49,30 +49,77 @@ layout(push_constant) uniform Push {
 
 结果说明：RGBE 编码格式预积分结果中，最左侧为 Diffuse 项，后续为不同 Roughness Level 下的 Specular 项。
 
-#### 其他能力点
+#### Cascade Shadow Map
 
-1. CSM + PCSS 阴影方案：通过 CSM 缓解透视走样，并用 PCSS 优化 Spot Light / Sphere Light 阴影，实现动态软阴影。
-2. 屏幕空间 Light Culling：仅计算有效光源，提升多光源场景性能。
+Sun Light的阴影计算使用了Cascade Shadow Map。首先根据相机的frustum，划分了四个cascade层级，然后，利用划分的层级，计算出一个包围球，基于这个包围球的半径，构建出四个ortho矩阵，最后，利用这四个矩阵，计算出shadowmap
 
-材料：A3 report（待补充链接）。
+<div align="center">
+    <video width="100%" controls>
+    <source src="./assets/myvk-cascade.mp4" type="video/mp4">
+    </video>
+</div>
 
-MyVk 关键实现总结：
-1. Frustum Culling 减少无效渲染提交。
-2. Bindless Texture 降低纹理绑定开销。
-3. PBR + IBL 提升光照真实性。
-4. CSM + PCSS 与 Light Culling 强化阴影与多光源性能。
+在采样阶段，为了避免切换cascade层级时产生的走样，我提前采样下一等级的cascade shadow map，并和当前cascade层级采样结果进行混合，以实现无缝切换cascade层级的效果
+
+<div align="center">
+    <video width="100%" controls>
+    <source src="./assets/myvk-cascade-debug.mp4" type="video/mp4">
+    </video>
+</div>
+
+该视频展示了在不同相机距离下选择不同的cascade层级
+
+#### PCSS
+
+Spot Light 和 Sphere Light 的阴影采样使用了PCSS算法。我的PCSS计算分为三个阶段，首先shader会在着色点附近向周围20个方向做采样，统计着色点附近的blocker数量和其对应的平均深度；接下来，根据统计结果估算Penumbra，最后根据Penumbra确定pcf采样核大小，pcf也进行20次均匀采样
+
+<div align="center">
+    <img src="./assets/myvk-No-Filtering.png" width="75%">
+</div>
+
+<div align="center">
+    <img src="./assets/myvk-PCF.png" width="75%">
+</div>
+
+<div align="center">
+    <img src="./assets/myvk-PCSS.png" width="75%">
+</div>
+
+三张图从上至下分别是完全不用滤波，使用PCF和使用PCSS。对比这三张图，我们可以观察到完全不用滤波的阴影边缘十分锐利，而使用PCF无论阴影距离光源远还是近，阴影边缘都被模糊了，最后PCSS在距离光源近的部分锐利，而距离光源远的部分模糊，更符合真实世界的观察
+
+#### 屏幕空间 Light Culling
+
+首先把屏幕空间沿着xy方向划分成若干个Tile，再遍历整个屏幕空间所有tile。在遍历的过程中，对于每个光源，我把以位置为圆心，limit为半径的圆投影到屏幕空间，然后看该投影是否在Tile中，如果在则说明这个光源对当前tile有影响
+
+<div align="center">
+    <video width="100%" controls>
+    <source src="./assets/myvk-light-culling.mp4" type="video/mp4">
+    </video>
+</div>
+
+在这个场景中，我复制了48块包含25个Sphere Light的平面，然后为相机制作了一个动画，从视角中只包含部分光源，逐渐到包含全部光源
+
+<div align="center">
+    <img src="./assets/myvk-close-light-culling.png" width="75%">
+</div>
+
+<div align="center">
+    <img src="./assets/myvk-open-light-culling.png" width="75%">
+</div>
+
+参考分析图表，我们可以观察到打开Light Sort之后，峰值frame time几乎下降了一半。在起始阶段视角内光源数量少的时候，下降的更多，甚至frame time只有不开启Light Sort的十分之一，这充分证明了分Tile剔除光源的有效性
 
 ---
 
 ### Unity 6 + Compute Shader SSR
 
-项目概述：在 Unity 6 渲染框架下实现 Compute Shader 版本 SSR，优化反射质量与光线步进效率。
+项目概述：在 Unity 6 渲染框架下实现 Compute Shader 版本 SSR。
 
-关键实现：
-1. 接入 Unity 6 渲染 API，完成 SSR 计算阶段接入。
-2. 通过 Compute Shader 重构屏幕空间反射流程，减少无效步进。
-
-材料：ETC desktop（待补充链接）。
+<div align="center">
+    <video width="100%" controls>
+    <source src="./assets/unity-SSR.mp4" type="video/mp4">
+    </video>
+</div>
 
 ---
 
