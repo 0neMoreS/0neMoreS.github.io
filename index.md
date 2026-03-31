@@ -147,7 +147,7 @@ layout(push_constant) uniform Push {
 
 #### NEE + MIS
 
-传统 Path Tracing 在 Diffuse 表面主要依赖 Cosine-Weighted 方向采样。样本数不足时，直接光命中概率低，图像容易出现高频噪点。为此我引入 Next Event Estimation（NEE），在着色点显式采样光源；再通过 Multiple Importance Sampling（MIS）融合“光源采样”和“BSDF 采样”两类估计，在相同 spp 下获得更稳定的收敛效果。
+传统 Path Tracing 在 Diffuse 表面主要依赖 Cosine-Weighted 方向采样。样本数不足时，直接光命中概率低，图像容易出现高频噪点。为此我引入 Next Event Estimation（NEE），在着色点显式采样光源；再通过 Multiple Importance Sampling（MIS）融合“光源采样”和“Cosine-Weighted 方向采样”两类估计，在相同 spp 下获得更稳定的收敛效果。
 
 <div style="display: flex; justify-content: center; gap: 10px;">
   <div style="text-align: center;">
