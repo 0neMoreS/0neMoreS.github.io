@@ -79,7 +79,7 @@ layout: default
   <figure><img src="./assets/myvk-open-light-culling.png" alt="开启 Tiled Light Culling 的性能记录。" loading="lazy" width="840" height="480"><figcaption>开启 Light Culling</figcaption></figure>
 </div>
 
-<div class="takeaway"><p>特性开关对照中，峰值 frame time 接近减半；视野内光源较少时最低可降至未开启时的约十分之一。测试场景下获得约 <strong>2 — 10 倍</strong>性能提升。</p></div>
+<div class="takeaway"><p>测试场景下获得约 <strong>2 — 10 倍</strong>性能提升。</p></div>
 
 ### PCSS
 
@@ -153,9 +153,11 @@ layout(push_constant) uniform Push {
   <figure><img src="./assets/mypt-naive-pt-20min.png" alt="MyPT 朴素 Path Tracing 焦散结果，渲染时间 20 分钟。" loading="lazy" width="1024" height="1024"><figcaption><strong>朴素 Path Tracing</strong>20 min</figcaption></figure>
 </div>
 
+<div class="takeaway"><p>Photon Mapping 估计出经典 Path Tracing 难以采样到的路径。</p></div>
+
 <h2 id="bernstein"><span class="project-number">05</span>Bernstein Bounds for Caustics</h2>
 
-<div class="project-meta"><span>SIGGRAPH 2025</span><span>NJU Meta Graphics · 2024.11 — 2025.02</span><span>Python / C++</span></div>
+<div class="project-meta"><span>SIGGRAPH 2025</span><span>NJU Meta Graphics · 2024.11 — 2025.02</span></div>
 
 为焦散渲染中每个三角形组贡献的辐照度计算保守边界，只对可能产生高贡献的光路组合进行采样，缩小搜索范围。我负责将算法从原型落地为高性能 C++ 完整实现。
 

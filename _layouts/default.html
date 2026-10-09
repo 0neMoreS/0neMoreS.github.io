@@ -142,7 +142,6 @@
       <span class="eyebrow">GRAPHICS · RENDERING · ENGINEERING</span>
       <h1>李博轩<span>Alex</span></h1>
       <p class="hero-description">图形算法与渲染工程作品集</p>
-      <p class="hero-subtitle">实时渲染 / 离线光传输 / 算法工程化</p>
       <div class="hero-bottom"><a class="hero-link" href="#projects">浏览代表项目 <span aria-hidden="true">↓</span></a><span class="hero-note">27 届 · 图形与引擎开发</span></div>
     </div>
   </header>
@@ -197,12 +196,22 @@
       let scheduled = false;
       const update = () => {
         let current = 0;
-        headings.forEach((heading, index) => { if (heading.getBoundingClientRect().top <= 155) current = index; });
+        // Anchor scrolling adds the container padding and the target margin.
+        const scrollPadding = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+        headings.forEach((heading, index) => {
+          const scrollMargin = parseFloat(getComputedStyle(heading).scrollMarginTop) || 0;
+          if (heading.getBoundingClientRect().top <= scrollPadding + scrollMargin + 1) current = index;
+        });
+        // A short final section may hit the document's scroll limit before its anchor aligns.
+        if (window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) current = headings.length - 1;
         links.forEach((link, index) => { if (index === current) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); });
         scheduled = false;
       };
-      window.addEventListener('scroll', () => { if (!scheduled) { scheduled = true; requestAnimationFrame(update); } }, { passive: true });
-      window.addEventListener('resize', update);
+      const scheduleUpdate = () => { if (!scheduled) { scheduled = true; requestAnimationFrame(update); } };
+      window.addEventListener('scroll', scheduleUpdate, { passive: true });
+      window.addEventListener('hashchange', scheduleUpdate);
+      window.addEventListener('load', scheduleUpdate);
+      window.addEventListener('resize', scheduleUpdate);
       update();
     })();
   </script>
