@@ -2,60 +2,7 @@
 layout: default
 ---
 
-<h2 id="restir"><span class="project-number">01</span>ReSTIR · SPMIS</h2>
-
-<div class="project-meta"><span>腾讯</span><span>引擎开发实习 · 2026.06 - 2026.09</span></div>
-
-在 RTXDI 框架中复现 Stochastic Pairwise MIS（SPMIS）空间重采样，并构建等样本、等半径的对照评测。从 GRIS 的理论出发分析样本复用的有效性，再借助 Compatibility-Guided Neighbor Selection（CGNS）筛选复用 cell，最后将方法迁移至 ReSTIR GI。
-
-<div class="result-grid">
-  <div class="result-item"><strong>35.7<span>%</span></strong><p>DI 的 MAPE 降低<br><small>SPMIS 相比 Pairwise</small></p></div>
-  <div class="result-item"><strong>8.4<span>%</span></strong><p>DI 的 MAPE 进一步降低<br><small>SPMIS + CGNS 相比 SPMIS</small></p></div>
-  <div class="result-item"><strong>15.1<span>%</span></strong><p>GI 的 MAPE 累计降低<br><small>SPMIS + CGNS 相比 Pairwise</small></p></div>
-</div>
-
-### Direct Illumination 复现
-
-在相同样本数和复用半径下，对比 Pairwise 与 SPMIS 的噪声和误差。通过共享 cell 中的候选样本，验证 SPMIS 空间重采样的效果，而不是通过增加样本预算获得收益。
-
-<figure class="evidence-figure">
-  <img src="./assets/restir-di-spmis.jpg" alt="Bistro 直接光对照：左侧为 Ground Truth，右侧为 GT、Pairwise 和 SPMIS 的局部放大图，MAPE 分别为 1.104 和 0.710。" loading="lazy" width="1080" height="451">
-  <figcaption><span>DI / Pairwise → SPMIS</span></figcaption>
-</figure>
-
-### Compatibility-Guided 优化
-
-复用样本经过 Shift Mapping 后，可能因为像素间几何差异失效。基于 GRIS 的理论基础，分析发现如果能尽量保证 Shift Mapping 前后的样本一致性，就能获得更好的结果。利用 CGNS 的兼容性启发式筛选复用 cell，就能很好地保证 Shift Mapping 前后的样本一致性，减少无效复用带来的方差。
-
-<figure class="evidence-figure">
-  <img src="./assets/restir-di-cgns.jpg" alt="Bistro 直接光兼容性筛选对照：GT、SPMIS、SPMIS 加 CGNS，MAPE 从 0.7997 降至 0.7329。" loading="lazy" width="1080" height="451">
-  <figcaption><span>DI / SPMIS → SPMIS + CGNS</span></figcaption>
-</figure>
-
-### Global Illumination 迁移
-
-将 SPMIS 与 CGNS 从直接光重采样迁移到 ReSTIR GI，并沿用对照评测验证间接光的噪声与误差变化。下图展示室内场景中灯具及局部反射区域的结果。
-
-<figure class="evidence-figure">
-  <img src="./assets/restir-gi-cgns.jpg" alt="室内间接光对照：GT、Pairwise、SPMIS、SPMIS 加 CGNS，MAPE 分别为 1.1358、0.9820 和 0.9647。" loading="lazy" width="1080" height="432">
-  <figcaption><span>GI / Pairwise → SPMIS → SPMIS + CGNS</span></figcaption>
-</figure>
-
-<h2 id="neural-bvh"><span class="project-number">02</span>Neural BVH</h2>
-
-<div class="project-meta"><span>腾讯</span><span>引擎开发实习 · 2026.05 - 2026.06</span></div>
-
-将论文原本基于 CUDA 的光追框架改造成基于 OptiX 的硬件光追版本，建立纯硬件求交的对照基线。针对首版神经求交在性能与画质上均不及纯硬件的问题，从求交精度和 Divergence 两方面分析瓶颈，将方案调整为主光线走硬件、仅在次级光线上对部分表面使用神经求交。
-
-### 性能收益的上限
-
-神经 AABB 候选收集不能像三角交点查询一样，利用已知最近命中的距离持续缩短遍历范围。分段计时显示，神经方案仅硬件遍历 BVH 的部分就已耗时 **1.5 ms**，与纯硬件完整求交的 **1.4 ms** 基本相当。
-
-<figure class="evidence-figure">
-  <img src="./assets/neural-bvh-study.jpg" loading="lazy" width="1080" height="608">
-</figure>
-
-<h2 id="myvk"><span class="project-number">03</span>MyVK</h2>
+<h2 id="myvk"><span class="project-number">01</span>MyVK</h2>
 
 <div class="project-meta"><span>个人项目 · 2025.11 — 2026.04</span></div>
 
@@ -121,7 +68,7 @@ layout(push_constant) uniform Push {
 } push;
 {% endhighlight %}
 
-<h2 id="mypt"><span class="project-number">04</span>MyPT</h2>
+<h2 id="mypt"><span class="project-number">02</span>MyPT</h2>
 
 <div class="project-meta"><span>个人项目 · 2025.03 — 2025.10</span></div>
 
@@ -155,7 +102,7 @@ layout(push_constant) uniform Push {
 
 <div class="takeaway"><p>Photon Mapping 估计出经典 Path Tracing 难以采样到的路径。</p></div>
 
-<h2 id="bernstein"><span class="project-number">05</span>Bernstein Bounds for Caustics</h2>
+<h2 id="bernstein"><span class="project-number">03</span>Bernstein Bounds for Caustics</h2>
 
 <div class="project-meta"><span>SIGGRAPH 2025</span><span>NJU Meta Graphics · 2024.11 — 2025.02</span></div>
 
@@ -173,7 +120,7 @@ layout(push_constant) uniform Push {
 
 将多项式度数改为编译期固定的模板参数，使循环边界成为常量，便于编译器自动向量化；针对高频出现的低度数稀疏组合，使用模板全特化提供快路径。结合实际运算量估算理论耗时，并与实测对照检查额外实现开销。
 
-<h2 id="unity-ssr"><span class="project-number">06</span>Unity · Compute Shader SSR</h2>
+<h2 id="unity-ssr"><span class="project-number">04</span>Unity · Compute Shader SSR</h2>
 
 <div class="project-meta"><span>Unity 6 / Compute Shader</span><span>屏幕空间反射</span></div>
 
